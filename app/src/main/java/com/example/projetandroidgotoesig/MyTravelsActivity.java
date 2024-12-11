@@ -111,31 +111,38 @@ public class MyTravelsActivity extends AppCompatActivity {
                             CoordinatesFetcher.getAddressFromGeoPoint(latitude, longitude, new CoordinatesFetcher.LocationCallback() {
                                 @Override
                                 public void onLocationFetched(String address) {
-                                    String travelDescription = "Date: " + formattedDate +
-                                            "\nAdresse de départ: " + (address != null ? address : "Address not found")+
-                                            "\nDistance: " + distance + " km" +
-                                            "\nDurée estimée: " + durationFormatted +
-                                            "\nMoyen de transport: " + transportMode +
-                                            "\nRetard accordé: "+ delayTolerance + "min" +
-                                            "\nPrix:" + price + "€" +
-                                            "\nTotal des places disponibles: " + seatsAvailable +
-                                            "\nTotal des places réservées:" + seatsBookedCount ;
+                                    // Utiliser runOnUiThread pour mettre à jour l'UI sur le thread principal
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            String travelDescription = "Date: " + formattedDate +
+                                                    "\nAdresse de départ: " + (address != null ? address : "Address not found") +
+                                                    "\nDistance: " + distance + " km" +
+                                                    "\nDurée estimée: " + durationFormatted +
+                                                    "\nMoyen de transport: " + transportMode +
+                                                    "\nRetard accordé: " + delayTolerance + "min" +
+                                                    "\nPrix: " + price + "€" +
+                                                    "\nTotal des places disponibles: " + seatsAvailable +
+                                                    "\nTotal des places réservées: " + seatsBookedCount;
 
-                                    // Séparer les trajets passés et à venir en fonction de la date
-                                    if (travelDate != null) {
-                                        if (travelDate.before(currentDate)) {
-                                            pastTravels.add(travelDescription);  // Trajet passé
-                                        } else {
-                                            upcomingTravels.add(travelDescription);  // Trajet à venir
+                                            // Séparer les trajets passés et à venir en fonction de la date
+                                            if (travelDate != null) {
+                                                if (travelDate.before(currentDate)) {
+                                                    pastTravels.add(travelDescription);  // Trajet passé
+                                                } else {
+                                                    upcomingTravels.add(travelDescription);  // Trajet à venir
+                                                }
+                                            }
+
+                                            // Mettre à jour les ListViews une fois toutes les adresses récupérées
+                                            if (pastTravels.size() + upcomingTravels.size() == queryDocumentSnapshots.size()) {
+                                                displayTravels(pastTravels, upcomingTravels);  // Afficher les trajets
+                                            }
                                         }
-                                    }
-
-                                    // Mettre à jour les ListViews une fois toutes les adresses récupérées
-                                    if (pastTravels.size() + upcomingTravels.size() == queryDocumentSnapshots.size()) {
-                                        displayTravels(pastTravels, upcomingTravels);  // Afficher les trajets
-                                    }
+                                    });
                                 }
                             });
+
                         }
                     }
                 })

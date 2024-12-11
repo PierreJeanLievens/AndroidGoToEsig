@@ -124,6 +124,8 @@ public class AddTripActivity extends AppCompatActivity {
         // Convertir les données
         double delayTolerance = Double.parseDouble(delayToleranceText);
         int seatsAvailable = Integer.parseInt(seatsAvailableText);
+
+        // Si cela est autre que driving-car, alors on prend la contribution à 0
         double contribution = transportMode.equalsIgnoreCase("driving-car") && !contributionText.isEmpty()
                 ? Double.parseDouble(contributionText)
                 : 0;

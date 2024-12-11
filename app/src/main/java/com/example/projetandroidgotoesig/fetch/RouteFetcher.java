@@ -6,12 +6,14 @@ import android.util.Log;
 import com.google.firebase.firestore.GeoPoint;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class RouteFetcher {
 
@@ -44,23 +46,23 @@ public class RouteFetcher {
                         + "&start=" + startCoordinates
                         + "&end=" + endCoordinates;
 
-                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-                connection.setRequestMethod("GET");
+                // Créer un client OkHttp
+                OkHttpClient client = new OkHttpClient();
 
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuilder responseBuilder = new StringBuilder();
-                    String line;
+                // Créer la requête
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
 
-                    while ((line = reader.readLine()) != null) {
-                        responseBuilder.append(line);
-                    }
-                    reader.close();
+                // Exécuter la requête et récupérer la réponse
+                Response response = client.newCall(request).execute();
 
-                    String response = responseBuilder.toString();
+                // Vérifier le code de réponse
+                if (response.isSuccessful()) {
+                    String responseString = response.body().string();
 
                     // Parse JSON pour obtenir l'objet summary
-                    JSONObject jsonResponse = new JSONObject(response);
+                    JSONObject jsonResponse = new JSONObject(responseString);
                     JSONArray features = jsonResponse.getJSONArray("features");
                     if (features.length() > 0) {
                         JSONObject properties = features.getJSONObject(0).getJSONObject("properties");
@@ -74,12 +76,14 @@ public class RouteFetcher {
                         Log.e("RouteFetcher", "Aucune route trouvée.");
                     }
                 } else {
-                    Log.e("API Error", "Erreur: " + connection.getResponseCode());
+                    Log.e("API Error", "Erreur: " + response.code());
                 }
 
-                connection.disconnect();
-            } catch (Exception e) {
+                response.close();
+            } catch (IOException e) {
                 Log.e("API Error", "Exception: " + e.getMessage(), e);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
 
             return summary;

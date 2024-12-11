@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+    <!-- Titre -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Menu"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Profil"
+        app:layout_constraintEnd_toEndOf="@+id/btnAddTrip"
+        app:layout_constraintStart_toStartOf="@+id/btnAddTrip"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <Button
+        android:id="@+id/btnAddTrip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Ajouter un trajet"
+        app:layout_constraintEnd_toEndOf="@+id/btnMyTrips"
+        app:layout_constraintStart_toStartOf="@+id/btnMyTrips"
+        app:layout_constraintTop_toBottomOf="@id/btnProfile" />
+
+    <Button
+        android:id="@+id/btnMyTrips"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Mes trajets"
+        app:layout_constraintEnd_toEndOf="@+id/btnSearchTrip"
+        app:layout_constraintStart_toStartOf="@+id/btnSearchTrip"
+        app:layout_constraintTop_toBottomOf="@id/btnAddTrip" />
+
+    <Button
+        android:id="@+id/btnSearchTrip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Chercher un trajet"
+        app:layout_constraintEnd_toEndOf="@+id/btnStatistics"
+        app:layout_constraintStart_toStartOf="@+id/btnStatistics"
+        app:layout_constraintTop_toBottomOf="@id/btnMyTrips" />
+
+    <Button
+        android:id="@+id/btnStatistics"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Statistiques"
+        app:layout_constraintEnd_toEndOf="@+id/btnQuit"
+        app:layout_constraintStart_toStartOf="@+id/btnQuit"
+        app:layout_constraintTop_toBottomOf="@id/btnSearchTrip" />
+
+    <Button
+        android:id="@+id/btnQuit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Quitter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnStatistics" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799504462967",
+    "project_id": "projet-android-gotoesig",
+    "storage_bucket": "projet-android-gotoesig.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799504462967:android:6e4edd29b8dd1b7db9c272",
+        "android_client_info": {
+          "package_name": "com.example.projetandroidgotoesig"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxx3aAz0xmGHcLFJG6lUckXqSNvi4_RrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

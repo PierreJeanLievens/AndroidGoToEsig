@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddTripActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"> <!-- Padding added for better spacing -->
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Retour" />
+
+        <!-- Titre -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="Ajouter un trajet"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Spinner pour sélectionner le mode de transport -->
+        <Spinner
+            android:id="@+id/spinnerTypeTransportMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Point de départ -->
+        <EditText
+            android:id="@+id/editStartPoint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Point de départ"
+            android:inputType="text"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Sélecteur de date -->
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Sélecteur d'heure -->
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:timePickerMode="clock"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Retard toléré -->
+        <EditText
+            android:id="@+id/editDelayTolerance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Retard toléré (min)"
+            android:inputType="number"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Nombre de places disponibles -->
+        <EditText
+            android:id="@+id/editSeatsAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de places disponibles"
+            android:inputType="number"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Contribution demandée (visible uniquement si Véhicule est sélectionné) -->
+        <EditText
+            android:id="@+id/editContribution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contribution demandée en €"
+            android:inputType="numberDecimal"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"/>
+
+        <!-- Bouton Ajouter le trajet -->
+        <Button
+            android:id="@+id/buttonAddTrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ajouter le trajet"
+            android:onClick="saveTrip"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

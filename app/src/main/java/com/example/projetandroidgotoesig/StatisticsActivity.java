@@ -1,0 +1,82 @@
+package com.example.projetandroidgotoesig;
+
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.Date;
+import java.util.List;
+
+public class StatisticsActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_statistics);
+
+        // Utilisation du bouton de retour
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> onBackPressed());
+
+        // Récupérer l'idUser depuis SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String idUser = sharedPreferences.getString("idUser", null);
+        if (idUser == null) {
+            Toast.makeText(StatisticsActivity.this, "Utilisateur non identifié", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Récupérer les références aux éléments UI pour afficher les statistiques
+        TextView tripsCountTextView = findViewById(R.id.tripsCountTextView);
+        TextView totalAmountTextView = findViewById(R.id.totalAmountTextView);
+
+        // Récupérer la référence à l'utilisateur dans la collection "user"
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("user").document(idUser);
+
+        // Rechercher les trajets associés à cet utilisateur en comparant avec la référence
+        db.collection("travel")
+                .whereEqualTo("userId", userRef)  // Comparer avec la référence
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int tripsCount = 0;  // Compteur de trajets
+                    double totalAmount = 0.0;  // Total des montants encaissés
+
+                    // Parcourir tous les trajets de l'utilisateur
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        // Récupérer la date du trajet
+                        Date date = document.getDate("date");
+                        if (date != null && date.before(new Date())) {  // Vérifier si la date est passée
+                            // Trajet passé, on incrémente le nombre de trajets
+                            tripsCount++;
+
+                            // Récupérer le prix
+                            Double price = document.getDouble("price");
+                            if (price != null) {
+                                // Récupérer le tableau seatsBooked
+                                List<?> seatsBooked = (List<?>) document.get("seatsBooked");
+                                if (seatsBooked != null) {
+                                    // Calculer le montant total pour ce trajet
+                                    totalAmount += price * seatsBooked.size();  // Multiplier le prix par le nombre de places réservées
+                                }
+                            }
+                        }
+                    }
+
+                    // Afficher le nombre de trajets et le total des montants
+                    tripsCountTextView.setText("Nombre de trajets créés : " + tripsCount);
+                    totalAmountTextView.setText("Total des gains: " + totalAmount + " €");
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(StatisticsActivity.this, "Erreur lors de la récupération des trajets : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+}

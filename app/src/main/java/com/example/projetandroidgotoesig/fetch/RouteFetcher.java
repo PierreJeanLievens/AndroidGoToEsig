@@ -35,6 +35,11 @@ public class RouteFetcher {
             GeoPoint endPoint = (GeoPoint) params[1];
             String transportMode = (String) params[2];
 
+            // Si le moyen de transport n'est pas valide, on prend la voiture par défaut
+            if (!transportMode.equals("driving-car") && !transportMode.equals("cycling-regular") && !transportMode.equals("foot-walking")) {
+                transportMode = "driving-car";
+            }
+
             String apiKey = "5b3ce3597851110001cf6248ac57c84bcec64455b61413718c74b1ac";
             RouteSummary summary = null;
 

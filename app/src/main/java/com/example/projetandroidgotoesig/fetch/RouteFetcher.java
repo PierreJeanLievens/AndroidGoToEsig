@@ -16,7 +16,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RouteFetcher {
-
+    /**
+     * Récupère la distance et la durée d'un itinéraire entre deux points
+     * @param startPoint
+     * @param endPoint
+     * @param transportMode
+     * @param callback
+     */
     public static void getRouteSummary(GeoPoint startPoint, GeoPoint endPoint, String transportMode, RouteCallback callback) {
         new GetRouteTask(callback).execute(startPoint, endPoint, transportMode);
     }

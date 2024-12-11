@@ -18,12 +18,16 @@ import java.io.IOException;
 
 public class LocationFetcher {
 
-    // Fonction pour récupérer les coordonnées à partir de l'adresse
+    /**
+     * Récupère les coordonnées à partir d'une adresse
+     * @param address
+     * @param callback
+     */
     public static void getGeoPointFromAddress(String address, LocationCallback callback) {
         // Construire l'URL pour l'API de géocodage
         String apiKey = "5b3ce3597851110001cf6248ac57c84bcec64455b61413718c74b1ac";
         String encodedAddress = address.replaceAll(" ", "+"); // Encoder l'adresse si nécessaire
-        String url = "https://api.openrouteservice.org/geocode/search?api_key=" + apiKey + "&text=" + encodedAddress;
+        String url = "https://api.openrouteservice.org/geocode/search?api_key=" + apiKey + "&text=" + encodedAddress + "&boundary.country=FR";
 
         // Effectuer la requête HTTP
         OkHttpClient client = new OkHttpClient();
@@ -48,17 +52,23 @@ public class LocationFetcher {
                         JSONArray features = jsonResponse.getJSONArray("features");
                         GeoPoint geoPoint = null;
 
+                        // Vérifier si des résultats sont trouvés
                         if (features.length() > 0) {
-                            JSONObject firstFeature = features.getJSONObject(0);
-                            JSONObject geometry = firstFeature.getJSONObject("geometry");
-                            JSONArray coordinatesArray = geometry.getJSONArray("coordinates");
+                            // Récupérer les coordonnées du premier résultat
+                            if (features.length() < 2) {
+                                JSONObject firstFeature = features.getJSONObject(0);
+                                JSONObject geometry = firstFeature.getJSONObject("geometry");
+                                JSONArray coordinatesArray = geometry.getJSONArray("coordinates");
 
-                            // Longitude en premier, puis latitude
-                            double longitude = coordinatesArray.getDouble(0);
-                            double latitude = coordinatesArray.getDouble(1);
+                                // Longitude en premier, puis latitude
+                                double longitude = coordinatesArray.getDouble(0);
+                                double latitude = coordinatesArray.getDouble(1);
 
-                            // Créer un GeoPoint Firebase
-                            geoPoint = new GeoPoint(latitude, longitude);
+                                // Créer un GeoPoint Firebase
+                                geoPoint = new GeoPoint(latitude, longitude);
+                            }else{
+                                Log.e("LocationFetcher", "Plus de 2 correspondances trouvées pour l'adresse : " + address);
+                            }
                         } else {
                             Log.e("LocationFetcher", "Aucune correspondance trouvée pour l'adresse : " + address);
                         }

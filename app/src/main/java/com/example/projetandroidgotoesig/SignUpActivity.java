@@ -124,28 +124,15 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    // Méthode pour encoder l'image en Base64
+    /**
+     * Méthode pour encoder une image en Base64
+     * @return
+     */
     private String encodeImage() {
         Bitmap bitmap = ((BitmapDrawable) imageViewPhotoPreview.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos); // Compresser l'image
         byte[] imageBytes = baos.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-    }
-
-    // Méthode pour sauvegarder l'utilisateur dans Firestore
-    private void saveUserToFirestore(String firstName, String lastName, String email, String phoneNumber, String city, String password, String encodedImage) {
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put("firstName", firstName);
-        newUser.put("lastName", lastName);
-        newUser.put("email", email);
-        newUser.put("phoneNumber", phoneNumber);
-        newUser.put("city", city);
-        newUser.put("password", password);
-        newUser.put("photoBase64", encodedImage);
-
-        db.collection("user").document().set(newUser)
-                .addOnSuccessListener(unused -> Toast.makeText(SignUpActivity.this, "Inscription réussie !", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Log.e("GoToEsig", "Erreur lors de l'inscription : " + e.getMessage()));
     }
 }

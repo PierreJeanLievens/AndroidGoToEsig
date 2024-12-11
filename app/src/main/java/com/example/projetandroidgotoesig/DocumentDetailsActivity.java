@@ -121,7 +121,11 @@ public class DocumentDetailsActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Récupère et affiche le tracé entre les deux points
+     * @param startGeoPoint
+     * @param endGeoPoint
+     */
     private void fetchRouteAndDisplay(GeoPoint startGeoPoint, GeoPoint endGeoPoint) {
         // Construire l'URL pour OpenRouteService
         String apiKey = "5b3ce3597851110001cf6248ac57c84bcec64455b61413718c74b1ac";

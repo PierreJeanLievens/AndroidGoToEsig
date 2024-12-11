@@ -108,6 +108,9 @@ public class AddTripActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("AddTripActivity", "Erreur lors de la récupération des modes de transport", e));
     }
 
+    /**
+     * Sauvegarde du trajet
+     */
     private void saveTrip() {
         String transportMode = transportModeValues.get(spinnerTransportMode.getSelectedItemPosition());
         String startPointText = editStartPoint.getText().toString().trim();
@@ -139,8 +142,11 @@ public class AddTripActivity extends AppCompatActivity {
         // Obtention des coordonnées à partir de l'adresse rentrée
         LocationFetcher.getGeoPointFromAddress(startPointText, startGeoPoint -> {
             if (startGeoPoint == null) {
-                Toast.makeText(AddTripActivity.this, "Impossible de localiser le point de départ " + startPointText, Toast.LENGTH_SHORT).show();
-                return;
+                // Afficher un message d'erreur sans quitter ou interrompre le flux principal
+                runOnUiThread(() ->
+                        Toast.makeText(AddTripActivity.this,"Adresse invalide : Réessayez avec une adresse plus précise :" + startPointText, Toast.LENGTH_SHORT).show()
+                );
+                return; // Sort de cette étape uniquement
             }
 
             // Définir le point de destination (ESIGELEC)
@@ -149,19 +155,41 @@ public class AddTripActivity extends AppCompatActivity {
             // Utilisation de RouteFetcher pour obtenir la distance et la durée
             RouteFetcher.getRouteSummary(startGeoPoint, endGeoPoint, transportMode, summary -> {
                 if (summary == null) {
-                    Toast.makeText(AddTripActivity.this, "Impossible de calculer l'itinéraire", Toast.LENGTH_SHORT).show();
-                    return;
+                    // Gérer le cas où l'itinéraire ne peut pas être calculé
+                    runOnUiThread(() ->
+                            Toast.makeText(AddTripActivity.this,"Impossible de calculer l'itinéraire", Toast.LENGTH_SHORT).show()
+                    );
+                    return; // Sort de cette étape uniquement
                 }
 
                 double distance = Math.round((summary.distance / 1000) * 100.0) / 100.0; // En km
                 int totalSeconds = (int) Math.round(summary.duration); // Durée totale en secondes
 
                 // Afficher la boîte de dialogue de confirmation
-                showConfirmationDialog(distance, totalSeconds, transportMode, startGeoPoint, endGeoPoint, date, delayTolerance, seatsAvailable, contribution);
+                runOnUiThread(() ->
+                        showConfirmationDialog(
+                                distance, totalSeconds, transportMode,
+                                startGeoPoint, endGeoPoint, date,
+                                delayTolerance, seatsAvailable, contribution
+                        )
+                );
             });
         });
+
     }
 
+    /**
+     * Affiche la boîte de dialogue de confirmation
+     * @param distance
+     * @param totalSeconds
+     * @param transportMode
+     * @param startGeoPoint
+     * @param endGeoPoint
+     * @param date
+     * @param delayTolerance
+     * @param seatsAvailable
+     * @param contribution
+     */
     private void showConfirmationDialog(double distance, int totalSeconds, String transportMode, GeoPoint startGeoPoint, GeoPoint endGeoPoint, Timestamp date, double delayTolerance, int seatsAvailable, double contribution) {
         int minutes = totalSeconds / 60; // Minutes entières
         int seconds = totalSeconds % 60; // Secondes restantes

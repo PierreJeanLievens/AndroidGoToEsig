@@ -16,12 +16,17 @@ import java.io.IOException;
 
 public class CoordinatesFetcher {
 
-    // Fonction pour récupérer l'adresse à partir des coordonnées
+    /**
+     * Récupère l'adresse à partir des coordonnées
+     * @param latitude
+     * @param longitude
+     * @param callback
+     */
     public static void getAddressFromGeoPoint(double latitude, double longitude, LocationCallback callback) {
         // Construire l'URL pour l'API de géocodage inverse
         String apiKey = "5b3ce3597851110001cf6248ac57c84bcec64455b61413718c74b1ac";
         String url = "https://api.openrouteservice.org/geocode/reverse?api_key=" + apiKey +
-                "&point.lon=" + longitude + "&point.lat=" + latitude;
+                "&point.lon=" + longitude + "&point.lat=" + latitude + "&boundary.country=FR";
 
         // Effectuer la requête HTTP
         OkHttpClient client = new OkHttpClient();

@@ -106,6 +106,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Méthode pour décoder une image en Base64
+     * @param encodedImage
+     * @return
+     */
     private Bitmap decodeBase64(String encodedImage) {
         byte[] decodedBytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);

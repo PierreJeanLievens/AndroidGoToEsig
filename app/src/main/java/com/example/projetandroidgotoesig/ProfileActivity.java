@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -26,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView lastNameTextView, firstNameTextView, emailTextView;
     private EditText phoneEditText, cityEditText;
     private ImageView profileImageView;
-    private String photoBase64 = null;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,33 +76,33 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
-        // Changer la photo
+        // Listener pour sélectionner une photo
         changePhotoButton.setOnClickListener(v -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Sélectionner une photo"), REQUEST_IMAGE_CAPTURE);
         });
+
 
         // Sauvegarder les changements
         saveButton.setOnClickListener(v -> {
             String phone = phoneEditText.getText().toString();
             String city = cityEditText.getText().toString();
-
+            String encodedImage = encodeImage();
             db.collection("user").document(idUser)
-                    .update("phoneNumber", phone, "city", city, "photo", photoBase64)
+                    .update("phoneNumber", phone, "city", city, "photo", encodedImage)
                     .addOnSuccessListener(aVoid -> Toast.makeText(ProfileActivity.this, "Profil mis à jour", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(ProfileActivity.this, "Erreur de sauvegarde", Toast.LENGTH_SHORT).show());
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            profileImageView.setImageBitmap(photo);
-            photoBase64 = encodeToBase64(photo);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            profileImageView.setImageURI(selectedImageUri); // Prévisualiser l'image sélectionnée
         }
     }
 
@@ -108,10 +110,15 @@ public class ProfileActivity extends AppCompatActivity {
         byte[] decodedBytes = Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
-
-    private String encodeToBase64(Bitmap image) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+    /**
+     * Méthode pour encoder une image en Base64
+     * @return
+     */
+    private String encodeImage() {
+        Bitmap bitmap = ((BitmapDrawable) profileImageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos); // Compresser l'image
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 }

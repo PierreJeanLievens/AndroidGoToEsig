@@ -18,13 +18,10 @@
         <!-- Titre -->
         <TextView
             android:id="@+id/tvTitle"
+            style="@style/TitleStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:text="Mes trajets"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:text="Mes trajets"/>
 
         <TextView
             android:id="@+id/titleIncoming"

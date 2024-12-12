@@ -13,13 +13,32 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Retour"
+            tools:ignore="MissingConstraints" />
+        <!-- Titre -->
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/TitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inscription"
+            android:layout_marginTop="52dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <!-- Champ pour le prénom -->
         <EditText
             android:id="@+id/editTextFirstName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Prénom"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:padding="12dp"
@@ -91,11 +110,12 @@
             android:id="@+id/btnSelectPhoto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
             android:text="Sélectionner une photo"
-            app:layout_constraintTop_toBottomOf="@id/imageViewPhotoPreview"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewPhotoPreview" />
 
         <!-- Champ pour le mot de passe -->
         <EditText

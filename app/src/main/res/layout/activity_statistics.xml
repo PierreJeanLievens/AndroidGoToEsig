@@ -42,7 +42,7 @@
         android:text="Nombre de trajets : 0"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleStatistics" />
 
@@ -50,11 +50,25 @@
         android:id="@+id/totalAmountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:text="Total des montants encaissés : 0.00 €"
         android:textSize="18sp"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tripsCountTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tripsCountTextView" />
+
+
+    <TextView
+        android:id="@+id/totalCarbonTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Emissions carbones économisées: 0.00 kg CO₂"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/totalAmountTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

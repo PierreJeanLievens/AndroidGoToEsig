@@ -49,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
             String email = editTextEmail.getText().toString();
             String password = editTextPassword.getText().toString();
 
+            // Hashage du mot de passe
+            String hashedPassword = SimpleHasher.hashPassword(password);
+
             // Vérifier si tous les champs sont remplis
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(LoginActivity.this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
@@ -64,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     String idUser = document.getId();
 
                     // Vérifier si le mot de passe correspond
-                    if (storedPassword != null && storedPassword.equals(password)) {
+                    if (storedPassword != null && storedPassword.equals(hashedPassword)) {
                         Toast.makeText(LoginActivity.this, "Connexion réussie !", Toast.LENGTH_SHORT).show();
                         Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
                         homeIntent.putExtra("idUser", idUser);

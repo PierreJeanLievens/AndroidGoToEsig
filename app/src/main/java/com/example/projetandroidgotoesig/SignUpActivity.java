@@ -85,6 +85,9 @@ public class SignUpActivity extends AppCompatActivity {
                 // Encoder l'image
                 String encodedImage = encodeImage();
 
+                // Hashage du password
+                String hashedPassword = SimpleHasher.hashPassword(password);
+
                 // Créer une carte pour l'utilisateur
                 Map<String, Object> newUser = new HashMap<>();
                 newUser.put("firstName", firstName);
@@ -92,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
                 newUser.put("email", email);
                 newUser.put("phoneNumber", phoneNumber);
                 newUser.put("city", city);
-                newUser.put("password", password);
+                newUser.put("password", hashedPassword);
                 newUser.put("photo", encodedImage);
 
                 // Enregistrer dans Firestore

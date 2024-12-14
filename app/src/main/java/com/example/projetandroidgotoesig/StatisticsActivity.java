@@ -52,12 +52,14 @@ public class StatisticsActivity extends AppCompatActivity {
 
                     // Parcourir tous les trajets de l'utilisateur
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+
+                        // On ajoute le trajet au total
+                        tripsCount++;
+
                         // Récupérer la date du trajet
                         Date date = document.getDate("date");
-                        if (date != null && date.before(new Date())) {  // Vérifier si la date est passée
-                            // Trajet passé, on incrémente le nombre de trajets
-                            tripsCount++;
 
+                        if (date != null && date.before(new Date())) {  // Vérifier si la date est passée
                             // Récupérer le prix
                             Double price = document.getDouble("price");
                             if (price != null) {

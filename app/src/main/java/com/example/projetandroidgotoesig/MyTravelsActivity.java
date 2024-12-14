@@ -1,5 +1,6 @@
 package com.example.projetandroidgotoesig;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.projetandroidgotoesig.fetch.CoordinatesFetcher;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -43,15 +45,27 @@ public class MyTravelsActivity extends AppCompatActivity {
         //listViewPast = findViewById(R.id.listViewPast); // Lier à la ListView dans XML
         //listViewIncoming = findViewById(R.id.listViewIncoming); // Lier à la ListView dans XML
 
+        // Récupérer l'idUser depuis SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String idUser = sharedPreferences.getString("idUser", null);
+        if (idUser == null) {
+            Toast.makeText(MyTravelsActivity.this, "Utilisateur non identifié", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         // Charger les données Firestore
-        fetchAllTravels();
+        fetchAllTravels(idUser);
     }
 
     /**
      * Charge toutes les données Firestore pour les trajets.
      */
-    private void fetchAllTravels() {
+    private void fetchAllTravels(String idUser) {
+        DocumentReference userRef = db.collection("user").document(idUser);
+
         db.collection("travel")
+                .whereEqualTo("userId", userRef)  // Comparer avec la référence
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     //<String> travelList = new ArrayList<>();
